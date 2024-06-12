@@ -28,7 +28,9 @@ router.get('/', Utils.authenticateToken, (req, res) => {
 
 // POST - create new gig --------------------------------------
 router.post('/', (req, res) => {
-  // validate 
+  // validation
+
+  // ADD DATE LIMITS
   if(Object.keys(req.body).length === 0){   
     return res.status(400).send({message: "Gig content can't be empty"})
   }
@@ -38,15 +40,18 @@ router.post('/', (req, res) => {
   }
 
   console.log('req.body = ', req.body)
+  console.log(req.body.day + req.body.month + req.body.year)
+  let date = "" + req.body.day + "/" + req.body.month + "/" + req.body.year
 
   // image file must exist, upload, then create new gig
   let uploadPath = path.join(__dirname, '..', 'public', 'images')
   Utils.uploadFile(req.files.image, uploadPath, (uniqueFilename) => {    
-    // create new haircut
+    
+    // create new gig
     let newGig = new Gig({
       title: req.body.title,
       description: req.body.description,
-      date: req.body.date,
+      date: date,
       venue: req.body.venue,
       image: uniqueFilename,
       time: req.body.time,
